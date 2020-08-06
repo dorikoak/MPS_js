@@ -1,7 +1,9 @@
 var express = require('express');
 var template = require('./template');
+var bodyParser = require('body-parser');
 var app = express();
-app.use(express.json())
+app.use(bodyParser.urlencoded({extended:true}))
+app.use(bodyParser.json())
 
 app.get('/', function(request, response) {
     var list = `<table class="table table-hover">
@@ -83,10 +85,21 @@ app.post('/enroll_process', function(request, response) {
     var id = request.body.ID;
     var ip = request.body.IP;
     // printerList.push(id);
+    console.log(request.body)
     console.log(id)
-    console.log(ip)
-    response.redirect('/?id='+id)
+    response.redirect('/')
 });
+
+app.post('/login_process', function(request, response) {
+    var id = request.body.ID;
+    var pw = request.body.PW;
+    // printerList.push(id);
+    console.log(request.body)
+    console.log(id)
+    // registerUser.registerUser(id, pw);
+    response.redirect('/')
+});
+
 
 app.get('/test', function(request, response) {
     response.send('test');
