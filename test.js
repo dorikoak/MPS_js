@@ -1,5 +1,7 @@
 var express = require('express');
 var template = require('./template');
+var query = require('./query');
+var registerUser = require('./registerUser');
 var bodyParser = require('body-parser');
 var app = express();
 app.use(bodyParser.urlencoded({extended:true}))
@@ -19,27 +21,23 @@ app.get('/', function(request, response) {
     </tr>
     </thead>
     <tbody>`;
-    let obj = {
-    id : 'Epson cx-29',
-    black : 100,
-    magenta : 20,
-    cyan : 30,
-    yellow : 40,
-    drum : 20,
-    Paper : 24884
-    };
-    list = list + template.list(obj);
-    //   obj = {
-    //     id : 'dori',
-    //     black : 0,
-    //     magenta : 20,
-    //     cyan : 30,
-    //     yellow : 40,
-    //     drum : 20,
-    //     Paper : 330
-    //   }
-      
-    //   list = list + template.list(obj);
+    // let obj = {
+    // id : 'Epson cx-29',
+    // black : 100,
+    // magenta : 20,
+    // cyan : 30,
+    // yellow : 40,
+    // drum : 20,
+    // Paper : 24884
+    // };
+    // list = list + template.list(obj);
+
+    for (let i = 0; i < printerList.length(); i++) {
+      let queryjson = await query('updatePrint', printerList[i], null);
+      console.log(queryjson);
+      let obj = JSON.parse(queryjson);
+      list = list + templateList(obj);
+    }
 
       list = list + `  </tbody>
     </table>
@@ -84,7 +82,8 @@ app.get('/enroll', function(request, response) {
 app.post('/enroll_process', function(request, response) {
     var id = request.body.ID;
     var ip = request.body.IP;
-    // printerList.push(id);
+    printerList.push(id);
+    
     console.log(request.body)
     console.log(id)
     response.redirect('/')
@@ -93,13 +92,12 @@ app.post('/enroll_process', function(request, response) {
 app.post('/login_process', function(request, response) {
     var id = request.body.ID;
     var pw = request.body.PW;
-    // printerList.push(id);
+    
     console.log(request.body)
     console.log(id)
-    // registerUser.registerUser(id, pw);
+    registerUser.registerUser(id, pw);
     response.redirect('/')
 });
-
 
 app.get('/test', function(request, response) {
     response.send('test');
@@ -108,3 +106,4 @@ app.get('/test', function(request, response) {
 app.listen(3000, function() {
     console.log('Example app listening on port 3000!');
 })
+
